@@ -87,13 +87,7 @@ public class WordChain {
 
             }
 
-            List<String> minSizeChain = new ArrayList<String>();
-            for(List<String> candidateList:chainListGroup){
-                if( isPenultimate(candidateList.get(candidateList.size()-1), destiny)) {
-                    candidateList.add(destiny);
-                    minSizeChain= candidateList;
-                }
-            }
+            List<String> minSizeChain = getMinimalWordChain(destiny, chainListGroup);
 
             if( !minSizeChain.isEmpty()){
                 chain = buildChain(chainList);
@@ -105,6 +99,17 @@ public class WordChain {
 
         }
 
+    }
+
+    private List<String> getMinimalWordChain(String destiny, List<List<String>> chainListGroup) {
+        List<String> minSizeChain = new ArrayList<String>();
+        for(List<String> candidateList:chainListGroup){
+            if( isPenultimate(candidateList.get(candidateList.size()-1), destiny)) {
+                candidateList.add(destiny);
+                minSizeChain= candidateList;
+            }
+        }
+        return minSizeChain;
     }
 
     private boolean notChainCompleted(String destiny, List<String> chainList) {

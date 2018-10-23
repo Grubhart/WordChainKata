@@ -154,7 +154,7 @@ public class WordChainTest {
 
 
         String obtainedChain = wordChain.getchain("car","bird",null);
-        String expectedChain = "lead:load:goad:gold";
+        String expectedChain = "car:bar:bur:bor:bord:bird";
 
         assertEquals(expectedChain,obtainedChain);
 
