@@ -13,7 +13,7 @@ public class WordChain {
 
     private HashSet<String> dictionary;
 
-    public void loadDictionary() throws IOException {
+    public void loadDictionaryAsLowerCase() throws IOException {
 
         System.out.println("loading dictionary");
         dictionary = new LinkedHashSet();
@@ -33,57 +33,48 @@ public class WordChain {
 
     }
 
-    public String getchain(String origin, String destiny, ArrayList<String> diccionario) throws IOException {
+    public String getChain(String origin, String destiny, ArrayList<String> littleDictionary) throws IOException {
 
-        loadDictionary();
+        loadDictionaryAsLowerCase();
 
         System.out.println("starting chain search");
         StringBuilder chain = new StringBuilder(origin);
 
-        if (( destiny.contains(origin) || origin.contains(destiny)) && ( Math.abs(destiny.length() - origin.length()) == 1 )) {
+        if (isConsecutiveWords(origin, destiny)) {
             chain.append(":").append(destiny);
             return chain.toString();
         }else{
 
-            List<String> workDiccionary;
-            if(null != diccionario){
-                workDiccionary= new ArrayList<String>(diccionario);
-            }
-            else {
-                workDiccionary = new ArrayList<String>(dictionary);
-            }
+            List<String> workDiccionary = getWorkDictionary(littleDictionary);
 
             workDiccionary.remove(origin.toLowerCase());
             workDiccionary.remove(destiny.toLowerCase());
 
-            List<List<String>> chainListGroup = new ArrayList<List<String>>();
+            LinkedHashSet<List<String>> chainListGroup = new LinkedHashSet<List<String>>();
             List<String> chainList = new ArrayList<String>();
             chainList.add(origin);
             chainListGroup.add(chainList);
 
-            int i=0;
             int count = 0;
-            while ( notChainCompleted(destiny, chainList) && count<20 ) {
+            boolean exit = false;
+            while ( notChainCompleted(destiny, chainList) && count<3 && !exit ) {
 
-                    while (i<workDiccionary.size()) {
-                        String chainElement = workDiccionary.get(i);
-                        List<List<String>> listTsoAdd = new ArrayList<List<String>>();
+                    for (String candidate :workDiccionary) {
+
+                        LinkedHashSet<List<String>> listsToAdd = new LinkedHashSet<List<String>>();
+
                         for (List<String> candidateList: chainListGroup) {
-                            if( isValidChainElement(candidateList.get(candidateList.size()-1),chainElement,destiny,candidateList)   ){
-                                if(differenceBeetween(candidateList.get(candidateList.size()-1),destiny)==differenceBeetween(chainElement,destiny)){
-                                    System.out.println("created candidate list");
-                                    listTsoAdd.add(new ArrayList<String>(candidateList));
-                                }
-                                candidateList.add(chainElement);
-                                System.out.println("added: "+chainElement);
+
+                            String lastValidCandidate = candidateList.get(candidateList.size() - 1);
+                            if( isValidCandidate(lastValidCandidate,candidate,destiny,candidateList)   ){
+                                generateAlternativeList(destiny, candidate, listsToAdd, candidateList, lastValidCandidate);
+                                candidateList.add(candidate);
                             }
                         }
-                        chainListGroup.addAll(listTsoAdd);
-                        i++;
+                        chainListGroup.addAll(listsToAdd);
+
                     }
-                i=0;
                 count++;
-                System.out.println("cycle: "+count);
 
             }
 
@@ -101,7 +92,28 @@ public class WordChain {
 
     }
 
-    private List<String> getMinimalWordChain(String destiny, List<List<String>> chainListGroup) {
+    private void generateAlternativeList(String destiny, String candidate, LinkedHashSet<List<String>> listsToAdd, List<String> candidateList, String lastValidCandidate) {
+        if(differenceBeetween(lastValidCandidate,destiny)==differenceBeetween(candidate,destiny)){
+            listsToAdd.add(new ArrayList<String>(candidateList));
+        }
+    }
+
+    private List<String> getWorkDictionary(ArrayList<String> littleDictionary) {
+        List<String> workDictionary;
+        if(null != littleDictionary){
+            workDictionary= new ArrayList<String>(littleDictionary);
+        }
+        else {
+            workDictionary = new ArrayList<String>(dictionary);
+        }
+        return workDictionary;
+    }
+
+    private boolean isConsecutiveWords(String origin, String destiny) {
+        return ( destiny.contains(origin) || origin.contains(destiny)) && ( Math.abs(destiny.length() - origin.length()) == 1 );
+    }
+
+    private List<String> getMinimalWordChain(String destiny, LinkedHashSet<List<String>> chainListGroup) {
         List<String> minSizeChain = new ArrayList<String>();
         for(List<String> candidateList:chainListGroup){
             if( isPenultimate(candidateList.get(candidateList.size()-1), destiny)) {
@@ -133,7 +145,7 @@ public class WordChain {
         return differenceBeetween(word,destiny).equals(1);
     }
 
-    private boolean isValidChainElement(String lastValidCandidate, String candidate, String destiny, List<String> chainList) {
+    private boolean isValidCandidate(String lastValidCandidate, String candidate, String destiny, List<String> chainList) {
         Integer differenceBeetweenLastValidCandidateAndDestiny = differenceBeetween(lastValidCandidate,destiny);
         Integer differenceBeetweenLastValidCandidateAndCandidate = differenceBeetween(lastValidCandidate,candidate);
         Integer differenceBeetweenCandidateAndDestiny = differenceBeetween(candidate,destiny);

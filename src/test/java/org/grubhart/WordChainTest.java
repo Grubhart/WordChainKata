@@ -1,11 +1,9 @@
 package org.grubhart;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,7 +24,7 @@ public class WordChainTest {
         String expectedChain = "hat:hate";
 
         ArrayList<String> diccionario = null;
-        String obtainedChain = wordChain.getchain(origin,destiny, diccionario);
+        String obtainedChain = wordChain.getChain(origin,destiny, diccionario);
 
         assertEquals(expectedChain,obtainedChain);
 
@@ -41,7 +39,7 @@ public class WordChainTest {
         String expectedChain = "hate:hat";
 
         ArrayList<String> diccionario = null;
-        String obtainedChain = wordChain.getchain(origin,destiny, diccionario);
+        String obtainedChain = wordChain.getChain(origin,destiny, diccionario);
 
         assertEquals(expectedChain,obtainedChain);
 
@@ -56,7 +54,7 @@ public class WordChainTest {
         diccionario.add("hot");
         diccionario.add("verb");
 
-        String obtainedChain = wordChain.getchain("cat","hot",diccionario);
+        String obtainedChain = wordChain.getChain("cat","hot",diccionario);
         String expectedChain = "cat:hat:hot";
 
         assertEquals(expectedChain,obtainedChain);
@@ -74,7 +72,7 @@ public class WordChainTest {
         diccionario.add("hot");
         diccionario.add("verb");
 
-        String obtainedChain = wordChain.getchain("cat","verb",diccionario);
+        String obtainedChain = wordChain.getChain("cat","verb",diccionario);
         String expectedChain = "error: no se pudo completar una cadena= cat:car";
 
         assertEquals(expectedChain,obtainedChain);
@@ -102,7 +100,7 @@ public class WordChainTest {
         diccionario.add("varb");
         diccionario.add("verb");
 
-        String obtainedChain = wordChain.getchain("cat","verb",diccionario);
+        String obtainedChain = wordChain.getChain("cat","verb",diccionario);
         String expectedChain = "cat:car:carb:cerb:verb";
 
         assertEquals(expectedChain,obtainedChain);
@@ -130,7 +128,36 @@ public class WordChainTest {
         diccionario.add("varb");
         diccionario.add("verb");
 
-        String obtainedChain = wordChain.getchain("cat","bird",diccionario);
+        String obtainedChain = wordChain.getChain("cat","bird",diccionario);
+        String expectedChain = "cat:car:card:bard:bird";
+
+        assertEquals(expectedChain,obtainedChain);
+
+
+    }
+
+    @Test
+    public void testDestinyDifferentOriginDIfferentSizeBird3() throws IOException {
+
+        ArrayList<String> diccionario = new ArrayList<String>();
+
+        diccionario.add("bar");
+        diccionario.add("bard");
+        diccionario.add("bird");
+        diccionario.add("cat");
+        diccionario.add("car");
+        diccionario.add("carb");
+        diccionario.add("card");
+        diccionario.add("cart");
+        diccionario.add("cerb");
+        diccionario.add("hat");
+        diccionario.add("hot");
+        diccionario.add("var");
+        diccionario.add("ver");
+        diccionario.add("varb");
+        diccionario.add("verb");
+
+        String obtainedChain = wordChain.getChain("cat","bird",diccionario);
         String expectedChain = "cat:car:card:bard:bird";
 
         assertEquals(expectedChain,obtainedChain);
@@ -142,7 +169,7 @@ public class WordChainTest {
     public void testDestinyDifferentOriginDIfferentSizeBirdFromFile() throws IOException {
 
 
-        String obtainedChain = wordChain.getchain("lead","gold",null);
+        String obtainedChain = wordChain.getChain("lead","gold",null);
         String expectedChain = "lead:load:goad:gold";
 
         assertEquals(expectedChain,obtainedChain);
@@ -153,8 +180,8 @@ public class WordChainTest {
     public void testDestinyDifferentOriginDIfferentSizeBirdFromFile1() throws IOException {
 
 
-        String obtainedChain = wordChain.getchain("car","bird",null);
-        String expectedChain = "car:bar:bur:bor:bord:bird";
+        String obtainedChain = wordChain.getChain("lift","left",null);
+        String expectedChain = "lift:left";
 
         assertEquals(expectedChain,obtainedChain);
 

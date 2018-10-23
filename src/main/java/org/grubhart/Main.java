@@ -23,8 +23,8 @@ public class Main {
         String secondWord = scanner.next();
 
         WordChain wordChain = new WordChain();
-        wordChain.loadDictionary();
-        String result = wordChain.getchain(firstWord,secondWord,null);
+        wordChain.loadDictionaryAsLowerCase();
+        String result = wordChain.getChain(firstWord,secondWord,null);
         System.out.println(result);
 
     }
