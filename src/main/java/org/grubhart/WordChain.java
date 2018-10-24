@@ -113,12 +113,16 @@ public class WordChain {
         return ( destiny.contains(origin) || origin.contains(destiny)) && ( Math.abs(destiny.length() - origin.length()) == 1 );
     }
 
-    private List<String> getMinimalWordChain(String destiny, LinkedHashSet<List<String>> chainListGroup) {
+    protected List<String> getMinimalWordChain(String destiny, LinkedHashSet<List<String>> chainListGroup) {
         List<String> minSizeChain = new ArrayList<String>();
+        Integer minimalSize = Integer.MAX_VALUE;
         for(List<String> candidateList:chainListGroup){
             if( isPenultimate(candidateList.get(candidateList.size()-1), destiny)) {
                 candidateList.add(destiny);
-                minSizeChain= candidateList;
+                if(minimalSize>candidateList.size()){
+                    minimalSize=candidateList.size();
+                    minSizeChain= candidateList;
+                }
             }
         }
         return minSizeChain;

@@ -3,7 +3,10 @@ package org.grubhart;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -202,6 +205,46 @@ public class WordChainTest {
         assertEquals((Integer)8,wordChain.differenceBeetween("mercedes","aria"));
         assertEquals((Integer)4,wordChain.differenceBeetween("cat","bird"));
         assertEquals((Integer)3,wordChain.differenceBeetween("car","bird"));
+
+
+    }
+    
+    @Test
+    public void testGetMinimalChainString(){
+
+
+        LinkedHashSet<List<String>> chainSet= new LinkedHashSet<List<String>>();
+        ArrayList<String> chain1 = new ArrayList<String>();
+        chain1.add("cat");
+        chain1.add("car");
+        chain1.add("cart");
+        chain1.add("card");
+        chain1.add("bard");
+        chain1.add("bard");
+
+        chainSet.add(chain1);
+
+        ArrayList<String> chain2 = new ArrayList<String>();
+        chain2.add("cat");
+        chain2.add("car");
+        chain2.add("card");
+        chain2.add("bard");
+        chain2.add("bard");
+        chainSet.add(chain2);
+
+        ArrayList<String> minimalChain = (ArrayList<String>) wordChain.getMinimalWordChain("bird", chainSet);
+
+        assertEquals(6,minimalChain.size());
+
+        LinkedHashSet<List<String>> chainSet2= new LinkedHashSet<List<String>>();
+        chain2.remove("bird");
+        chain1.remove("bird");
+        chainSet2.add(chain2);
+        chainSet2.add(chain1);
+        minimalChain = (ArrayList<String>) wordChain.getMinimalWordChain("bird", chainSet2);
+        assertEquals(6,minimalChain.size());
+
+
 
 
     }
